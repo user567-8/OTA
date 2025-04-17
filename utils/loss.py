@@ -319,7 +319,9 @@ class ComputeLossOTA:
                     lbox += (1.0 - iou).mean()  # iou loss
 
                 # Objectness
-                tobj[b, a, gj, gi] = (1.0 - self.gr) + self.gr * iou.detach().clamp(0).type(tobj.dtype)  # iou ratio
+                #tobj[b, a, gj, gi] = (1.0 - self.gr) + self.gr * iou.detach().clamp(0).type(tobj.dtype)  # iou ratio原来报错部分
+                 # 修改后（添加squeeze操作）
+                tobj[b, a, gj, gi] = (1.0 - self.gr) + self.gr * torch.squeeze(iou.detach()).clamp(0).type(tobj.dtype) 
 
                 # Classification
                 selected_tcls = targets[i][:, 1].long()
